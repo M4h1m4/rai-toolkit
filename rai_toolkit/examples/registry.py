@@ -747,7 +747,14 @@ EXAMPLE_CATALOG: dict[str, ExampleDescriptor] = {
 
 
 DEMO_EXAMPLE_BUNDLES: dict[str, list[str]] = {
-    "healthcare": ["healthbench-triage", "pii-extraction-probes"],
+    # ``clinical-triage-policy-examples`` is first so demo runs surface
+    # row-level policy violations when paired with the policy-violation demo
+    # model (``demo_app.policy_violation_demo:build_model``).
+    "healthcare": [
+        "clinical-triage-policy-examples",
+        "healthbench-triage",
+        "pii-extraction-probes",
+    ],
     "financial_services": ["finqa-sample"],
     "government": ["mit-risk-smoke"],
     "general": ["mit-risk-smoke"],

@@ -193,3 +193,33 @@ def get_all_required_mit_categories() -> list[str]:
     for req in EU_AI_ACT_REQUIREMENTS.values():
         categories.update(req.mit_category_ids)
     return sorted(categories)
+
+
+# Reviewer-facing subtitles for framework coverage tables (Weave panel, HTML
+# report, Streamlit). Kept short so rows stay scannable in narrow panels.
+EU_ARTICLE_DISPLAY_SUBTITLES: dict[str, str] = {
+    "EU-HR-1": "Risk management system",
+    "EU-HR-2": "Data governance",
+    "EU-HR-3": "Technical documentation",
+    "EU-HR-4": "Record-keeping",
+    "EU-HR-5": "Transparency",
+    "EU-HR-6": "Human oversight",
+    "EU-HR-7": "Accuracy, robustness",
+    "EU-HR-8": "Bias testing and mitigation",
+}
+
+
+def format_eu_ai_act_framework_label(
+    requirement_id: str,
+    *,
+    article: str | None = None,
+    title: str | None = None,
+) -> str:
+    """Build a framework row label like ``EU AI Act: Article 9 (Risk management system)``."""
+    article_label = article or requirement_id
+    subtitle = EU_ARTICLE_DISPLAY_SUBTITLES.get(requirement_id)
+    if subtitle is None and title:
+        subtitle = title
+    if subtitle:
+        return f"EU AI Act: {article_label} ({subtitle})"
+    return f"EU AI Act: {article_label}"

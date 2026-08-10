@@ -68,6 +68,8 @@ class FrameworkAssessment:
     coverage_percent: float
     status: str
     findings: list[str] = field(default_factory=list)
+    covered_count: int | None = None
+    total_count: int | None = None
 
     @property
     def passed(self) -> bool:
@@ -771,12 +773,17 @@ class Assessor:
             logger.debug("NIST coverage unavailable: %s", e)
 
         try:
+            from rai_toolkit.compliance.eu_ai_act_mapping import format_eu_ai_act_framework_label
+
             eu_cov = self.engine.get_eu_ai_act_coverage(profile)
             for req_id, cov in eu_cov.items():
-                label = cov.get("article") or req_id
                 assessments.append(
                     _build_assessment(
-                        framework=f"EU AI Act: {label}",
+                        framework=format_eu_ai_act_framework_label(
+                            req_id,
+                            article=cov.get("article"),
+                            title=cov.get("title"),
+                        ),
                         coverage=cov,
                         eval_results=eval_results,
                         na_note="No scorer-measurable categories for this article. Requires human attestation.",
@@ -1084,11 +1091,25 @@ def _build_assessment(
     findings: list[str] = []
     if status == "N/A":
         findings.append(na_note)
+    total_raw = coverage.get("total_categories")
+    covered_raw = coverage.get("covered_categories")
+    total_count: int | None = None
+    covered_count: int | None = None
+    try:
+        if total_raw is not None:
+            total_count = int(total_raw)
+        if covered_raw is not None:
+            covered_count = int(covered_raw)
+    except (TypeError, ValueError):
+        total_count = None
+        covered_count = None
     return FrameworkAssessment(
         framework=framework,
         coverage_percent=_coverage_fraction(coverage),
         status=status,
         findings=findings,
+        covered_count=covered_count,
+        total_count=total_count,
     )
 
 
@@ -1591,7 +1612,7 @@ def _render_html(result: "AssessmentResult") -> str:
         )
         framework_rows.append(
             f"<tr><td>{html.escape(f.label)}{findings_html}</td>"
-            f'<td class="num">{_fmt_pct(f.coverage_percent)}</td>'
+            f'<td class="num">{html.escape(f.coverage_label)}</td>'
             f"<td>{_pill(f.status)}</td></tr>"
         )
 
