@@ -58,12 +58,12 @@ def wandb_run_context(
           "entity":   "<entity>",
         }
 
-    The run is closed with ``wandb.finish()`` on exit, success or exception
-    — that satisfies the "at the end terminate the W&B run" requirement
+    The run is closed with ``wandb.finish()`` on exit, success or exception;
+    that satisfies the "at the end terminate the W&B run" requirement
     even when the assessment pipeline raises.
     """
     if not project:
-        # Caller didn't configure W&B / Weave at all — degrade silently so
+        # Caller didn't configure W&B / Weave at all. Degrade silently so
         # this helper can be wrapped around any assessment run without the
         # caller having to gate on it.
         yield None
@@ -113,7 +113,7 @@ def wandb_run_context(
 
         weave_attrs_cm = weave.attributes(attrs)
     except Exception as e:
-        # ``weave.attributes`` is a best-effort tag — its absence shouldn't
+        # ``weave.attributes`` is a best-effort tag; its absence shouldn't
         # break the run. The wandb run still completes; traces just won't
         # carry the run_id in their attribute panel.
         logger.debug("weave.attributes(%s) skipped: %s", attrs, e)
@@ -168,7 +168,7 @@ def summarize_assessment_run(
         wandb.summary.update({k: v for k, v in summary.items() if v is not None})
 
         # Also emit one ``wandb.log`` row so the run history (Charts tab) has
-        # a single point per assessment — handy when users plot
+        # a single point per assessment, handy when users plot
         # evaluation_score across resubmissions of the same app.
         wandb.log({k: v for k, v in summary.items() if isinstance(v, (int, float))})
     except Exception as e:

@@ -533,7 +533,7 @@ Notably:
   NVIDIA/garak probes into the toolkit's `RedTeamReport` shape. If you
   publish work that uses this adapter, cite the Garak paper listed in
   [`NOTICE`](NOTICE).
-- **HealthBench** (loaded via the `healthbench-triage` example slug) —
+- **HealthBench** (loaded via the `healthbench-triage` example slug):
   the `_healthbench_triage_loader` streams
   [openai/healthbench](https://huggingface.co/datasets/openai/healthbench)
   (MIT) from HuggingFace at runtime (no copy is bundled). If you publish
