@@ -18,6 +18,10 @@ from integrations.weave_integration.feedback import (
     attach_reviewer_decision,
     probe_thread,
 )
+from integrations.weave_integration.wandb_run import (
+    summarize_assessment_run,
+    wandb_run_context,
+)
 
 # Importing ``views`` registers the assessment HTML renderer, the
 # ``weave.set_view`` adapter, and the per-op extensions (call_display_name,
@@ -36,4 +40,6 @@ __all__ = [
     "attach_manual_finding",
     "attach_reviewer_decision",
     "probe_thread",
+    "summarize_assessment_run",
+    "wandb_run_context",
 ]

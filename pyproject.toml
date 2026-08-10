@@ -63,8 +63,7 @@ pyrit = [
 garak = [
     "garak>=0.15.0",
     # transformers v5 (a garak transitive dep) lazy-references torchvision in
-    # its `*_image_processing_fast` modules. Without this, Streamlit's source
-    # watcher spams ModuleNotFoundError tracebacks on app start. None of our
+    # its `*_image_processing_fast` modules. None of our
     # runtime paths use torchvision; it's purely there to satisfy the lazy
     # attribute walk.
     "torchvision>=0.20.0",
