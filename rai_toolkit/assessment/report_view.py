@@ -331,8 +331,14 @@ def _framework_row(f: Any) -> FrameworkRow:
     status = str(getattr(f, "status", "FAIL"))
     is_na = status == "N/A" or bool(getattr(f, "is_not_applicable", False))
     coverage = float(getattr(f, "coverage_percent", 0) or 0)
+    covered = getattr(f, "covered_count", None)
+    total = getattr(f, "total_count", None)
     if is_na:
-        coverage_label = "Not applicable. Process-level requirement, no scorer-measurable controls."
+        coverage_label = (
+            "Not applicable. Process-level requirement, no scorer-measurable controls."
+        )
+    elif covered is not None and total is not None:
+        coverage_label = f"{covered} of {total}"
     else:
         coverage_label = f"{coverage * 100:.0f}% of mapped scorers"
     return FrameworkRow(
@@ -380,7 +386,16 @@ def _attack_row(row: dict[str, Any]) -> AttackRow:
 class _DictFrameworkRow:
     """Attribute-access shim for a serialized FrameworkAssessment dict."""
 
-    __slots__ = ("framework", "coverage_percent", "status", "findings", "is_not_applicable", "passed")
+    __slots__ = (
+        "framework",
+        "coverage_percent",
+        "status",
+        "findings",
+        "is_not_applicable",
+        "passed",
+        "covered_count",
+        "total_count",
+    )
 
     def __init__(self, d: dict[str, Any]) -> None:
         self.framework = d.get("framework", "")
@@ -389,6 +404,8 @@ class _DictFrameworkRow:
         self.findings = list(d.get("findings") or [])
         self.is_not_applicable = self.status == "N/A" or bool(d.get("is_not_applicable"))
         self.passed = self.status in ("PASS", "N/A")
+        self.covered_count = d.get("covered_count")
+        self.total_count = d.get("total_count")
 
 
 class _DictResult:

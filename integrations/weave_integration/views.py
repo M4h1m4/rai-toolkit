@@ -195,6 +195,8 @@ def render_assessment_html(result: AssessmentResult) -> str:
 
     # Framework coverage: framework + scorer coverage, two columns. N/A rows
     # (e.g. NIST GOVERN) span the coverage cell with their explanation.
+    # Applicable rows show a progress bar plus an "X of Y" count (not a raw
+    # percentage) so reviewers can see both proportion and absolute coverage.
     fw_rows = ""
     for f in view.frameworks:
         if f.is_not_applicable:
@@ -207,7 +209,7 @@ def render_assessment_html(result: AssessmentResult) -> str:
         fw_rows += (
             f"<tr><td>{escape(f.label)}</td>"
             f'<td><span class="coverage-bar"><div style="width:{pct * 100:.0f}%"></div></span>'
-            f"{pct * 100:.0f}%</td></tr>"
+            f"{escape(f.coverage_label)}</td></tr>"
         )
     if not fw_rows:
         fw_rows = '<tr><td colspan="2" class="empty">No frameworks assessed.</td></tr>'
