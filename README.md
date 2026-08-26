@@ -7,6 +7,8 @@
 > findings back to the evidence that produced them.
 
 Prefer to watch first? See the full review gate in a short walkthrough video: https://www.youtube.com/watch?v=-dGIUA_LLik
+
+Companion resources: the ebook [Governance Workflows for AI Agents](https://wandb.ai/site/resources/whitepapers/operationalizing-ai-governance/) and the webinar [How to Operationalize AI Governance for Production Agents](https://wandb.ai/site/resources/events/how-to-operationalize-ai-governance-for-production-agents/).
 ```bash
 git clone https://github.com/wandb/rai-toolkit.git
 cd rai-toolkit
@@ -139,6 +141,8 @@ Built-in coverage for:
 Encode your organization's compliance rules as versioned YAML files. Ship
 with 13 starter policies covering EU AI Act Article 15, HIPAA safeguards,
 and fairness baselines.
+See [docs/policy_packs.md](docs/policy_packs.md) for bundling organization-specific
+policies into versioned policy packs.
 
 Policy violations require policy-grade evidence. A raw scorer failure is
 reported as a reviewer finding unless the originating dataset row declares
@@ -464,7 +468,7 @@ integrations/
 
 ## Contributing
 
-PRs welcome. The highest-impact contributions right now:
+PRs welcome. New here? Check the [good first issue](https://github.com/wandb/rai-toolkit/labels/good%20first%20issue) label for scoped starters. The highest-impact contributions right now:
 - Additional framework mappings (ISO 42001, Colorado AI Act, NYC LL144)
 - More red-team attack templates (with responsible disclosure)
 - Stronger LLM-judge coverage and prompts under `rai_toolkit/prompts`
