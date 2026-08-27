@@ -1,0 +1,3 @@
+# Normalize line endings across the repo. Force LF for Python sources.
+* text=auto
+*.py text eol=lf
