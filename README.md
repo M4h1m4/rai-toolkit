@@ -305,6 +305,8 @@ git URL (e.g. `git+https://github.com/wandb/rai-toolkit.git@v0.1.0`).
 The Python import path is `rai_toolkit` (e.g. `from rai_toolkit import Assessor`)
 regardless of which install method you use.
 
+Running fully self-hosted or air-gapped? See [docs/self_hosted.md](docs/self_hosted.md).
+
 ## Quickstart
 
 ```python
