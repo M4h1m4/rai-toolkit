@@ -51,3 +51,10 @@ By submitting a contribution you agree it is licensed under Apache-2.0 (see
 
 Email **contact@wandb.ai** privately. Don't open a public issue for
 vulnerabilities.
+
+## Quick start for new contributors
+
+- Scoped starter work lives under the [good first issue](https://github.com/wandb/rai-toolkit/labels/good%20first%20issue) label.
+- Framework mappings (ISO/IEC 42001 #6, Colorado AI Act #7, NYC LL144 #8) mirror the existing NIST AI RMF mapping structure in `rai_toolkit/compliance/`.
+- The example policy pack under `rai_toolkit/policies/packs/example_enterprise_pack/` shows the policy format.
+- Lint policies with `rai policies lint`.
