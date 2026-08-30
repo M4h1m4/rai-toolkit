@@ -15,6 +15,13 @@ pip install -e ".[all]"
 - One change per PR.
 - Cover behavioural changes with a test.
 
+## Claiming an issue
+
+- Check the issue thread for an existing claim or linked PR before you start.
+- To claim, comment on the issue that you're working on it, then open your PR when ready. No need to wait for a reply.
+- One PR per issue. When duplicates land, the PR from whoever claimed first gets the review.
+- AI-assisted contributions are fine. Say so in the PR description, and be ready to explain and rework any line when asked.
+
 ## License headers
 <!--- REUSE-IgnoreStart -->
 
@@ -28,7 +35,7 @@ template in `.reuse/templates/`:
 
 ```shell
 reuse annotate --license Apache-2.0 --copyright 'CoreWeave, Inc.' --year 2026 \
-  --template default_template --merge-copyrights $FILE
+--template default_template --merge-copyrights $FILE
 ```
 
 Do not blindly add headers to every file. Assigning the wrong copyright owner
