@@ -53,6 +53,29 @@ def test_supported_response_carries_verified_spans() -> None:
     ]
 
 
+def test_normalized_evidence_spans_preserve_verbatim_row_text() -> None:
+    scorer = _scorer(
+        {
+            "score": 3,
+            "supporting_spans": [
+                {
+                    "response_span": 'The "answer" is 42.',
+                    "context_span": "It's correct.",
+                }
+            ],
+        }
+    )
+
+    result = scorer.score(
+        "The “answer”\n  is 42.",
+        context="The source says: It’s\tcorrect.",
+    )
+
+    assert result.details["supporting_spans"] == [
+        {"response_span": "The “answer”\n  is 42.", "context_span": "It’s\tcorrect."}
+    ]
+
+
 def test_fabricated_evidence_spans_are_discarded() -> None:
     scorer = _scorer(
         {
