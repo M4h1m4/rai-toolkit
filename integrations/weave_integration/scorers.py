@@ -6,12 +6,14 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 from typing import Any
 
 import weave
 
 from rai_toolkit.scorers.base import BaseScorer, ScorerResult
+from rai_toolkit.scorers.llm_judges import LLMJudgeScorer
 
 logger = logging.getLogger(__name__)
 
@@ -65,6 +67,15 @@ def _filter_inner_scorer_kwargs(scorer: BaseScorer, extras: dict[str, Any]) -> d
     return {k: v for k, v in extras.items() if k in sig.parameters}
 
 
+def _score_async_delegates_to_sync(scorer: BaseScorer) -> bool:
+    """Return whether score_async directly delegates to blocking score."""
+    implementation = type(scorer).score_async
+    return implementation in {
+        BaseScorer.score_async,
+        LLMJudgeScorer.score_async,
+    }
+
+
 class WeaveRAIScorer(weave.Scorer):
     """Wraps any rai_toolkit BaseScorer as a Weave-compatible scorer.
 
@@ -109,7 +120,7 @@ class WeaveRAIScorer(weave.Scorer):
         call_display_name=lambda call: _wrapped_scorer_display_name(call),
         kind="scorer",
     )
-    def score(
+    async def score(
         self,
         output: dict[str, Any] | str,
         input_text: str = "",
@@ -159,13 +170,24 @@ class WeaveRAIScorer(weave.Scorer):
         if plain_rubrics is not None:
             optional_inputs["rubrics"] = plain_rubrics
 
-        result = self._rai_scorer.score(
-            output=output_text,
-            input=input_text,
-            context=effective_context,
-            **_filter_inner_scorer_kwargs(self._rai_scorer, optional_inputs),
-            **kwargs,
-        )
+        scorer_extras = _filter_inner_scorer_kwargs(self._rai_scorer, optional_inputs)
+        if _score_async_delegates_to_sync(self._rai_scorer):
+            result = await asyncio.to_thread(
+                self._rai_scorer.score,
+                output=output_text,
+                input=input_text,
+                context=effective_context,
+                **scorer_extras,
+                **kwargs,
+            )
+        else:
+            result = await self._rai_scorer.score_async(
+                output=output_text,
+                input=input_text,
+                context=effective_context,
+                **scorer_extras,
+                **kwargs,
+            )
 
         # Serialize manually instead of ``asdict`` so we can coerce
         # WeaveList/WeaveDict anywhere they sneak into ``details``
